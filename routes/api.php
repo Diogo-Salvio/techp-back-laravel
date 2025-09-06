@@ -20,6 +20,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/musicas/pendentes', [MusicaController::class, 'pendentes']);
     Route::patch('/musicas/{musica}/aprovar', [MusicaController::class, 'aprovar']);
     Route::patch('/musicas/{musica}/reprovar', [MusicaController::class, 'reprovar']);
+
+    // Rotas para gerenciar sugestões
+    Route::patch('/sugestoes/{sugestao}/aprovar', [MusicaController::class, 'aprovarSugestao']);
+    Route::patch('/sugestoes/{sugestao}/reprovar', [MusicaController::class, 'reprovarSugestao']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
