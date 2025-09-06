@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Musica;
-use App\Models\SugestaoMusica;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
@@ -51,60 +50,6 @@ class MusicaController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Erro ao carregar top 5: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * Sugerir nova música
-     */
-    public function sugerir(Request $request): JsonResponse
-    {
-        try {
-            $validator = Validator::make($request->all(), [
-                'titulo' => 'required|string|max:255',
-                'youtube_url' => 'required|url',
-                'comentario_sugestao' => 'nullable|string|max:1000'
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Dados inválidos',
-                    'errors' => $validator->errors()
-                ], 422);
-            }
-
-            // Validar se é uma URL válida do YouTube
-            if (!$this->isValidYouTubeUrl($request->youtube_url)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'URL do YouTube inválida. Use um link do YouTube válido.'
-                ], 422);
-            }
-
-            // Extrair dados do YouTube (título e visualizações se possível)
-            $youtubeData = $this->extractYouTubeData($request->youtube_url);
-
-            $sugestao = SugestaoMusica::create([
-                'titulo' => $request->titulo,
-                'artista' => $youtubeData['artista'] ?? 'Tião Carreiro e Pardinho',
-                'youtube_url' => $request->youtube_url,
-                'visualizacoes' => $youtubeData['visualizacoes'] ?? 0,
-                'status' => 'pendente',
-                'comentario_sugestao' => $request->comentario_sugestao,
-                'user_id' => auth()->id() // Se houver usuário logado
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'data' => $sugestao,
-                'message' => 'Música sugerida com sucesso! Aguarde aprovação.'
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Erro ao sugerir música: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -164,136 +109,6 @@ class MusicaController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Erro ao reprovar música: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * Listar sugestões pendentes (apenas usuários autenticados)
-     */
-    public function pendentes(): JsonResponse
-    {
-        try {
-            if (!auth()->check()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Usuário não autenticado'
-                ], 401);
-            }
-
-            $pendentes = SugestaoMusica::pendentes()
-                ->with('usuario')
-                ->orderBy('created_at', 'desc')
-                ->get();
-
-            return response()->json([
-                'success' => true,
-                'data' => $pendentes,
-                'message' => 'Sugestões pendentes carregadas'
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Erro ao carregar sugestões: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * Validar se é uma URL válida do YouTube
-     */
-    private function isValidYouTubeUrl(string $url): bool
-    {
-        $patterns = [
-            '/^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)[^&\n?#]+/',
-        ];
-
-        foreach ($patterns as $pattern) {
-            if (preg_match($pattern, $url)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Extrair dados do YouTube (título, artista, visualizações)
-     */
-    private function extractYouTubeData(string $url): array
-    {
-        // Por enquanto, retorna dados básicos
-        // Em produção, você pode usar a API do YouTube ou web scraping
-        return [
-            'artista' => 'Tião Carreiro e Pardinho',
-            'visualizacoes' => 0
-        ];
-    }
-
-    /**
-     * Aprovar sugestão e mover para tabela de músicas
-     */
-    public function aprovarSugestao(Request $request, SugestaoMusica $sugestao): JsonResponse
-    {
-        try {
-            if (!auth()->check()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Usuário não autenticado'
-                ], 401);
-            }
-
-            // Criar música na tabela principal
-            $musica = Musica::create([
-                'titulo' => $sugestao->titulo,
-                'artista' => $sugestao->artista,
-                'letra' => $sugestao->letra,
-                'youtube_url' => $sugestao->youtube_url,
-                'visualizacoes' => $sugestao->visualizacoes,
-                'posicao_top5' => $request->posicao_top5 ?? null,
-                'status' => 'aprovada',
-                'comentario_sugestao' => $sugestao->comentario_sugestao
-            ]);
-
-            // Marcar sugestão como aprovada
-            $sugestao->update(['status' => 'aprovada']);
-
-            return response()->json([
-                'success' => true,
-                'data' => $musica,
-                'message' => 'Sugestão aprovada e música criada com sucesso'
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Erro ao aprovar sugestão: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * Reprovar sugestão
-     */
-    public function reprovarSugestao(Request $request, SugestaoMusica $sugestao): JsonResponse
-    {
-        try {
-            if (!auth()->check()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Usuário não autenticado'
-                ], 401);
-            }
-
-            $sugestao->update(['status' => 'reprovada']);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Sugestão reprovada com sucesso'
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Erro ao reprovar sugestão: ' . $e->getMessage()
             ], 500);
         }
     }

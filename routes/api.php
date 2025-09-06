@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MusicaController;
+use App\Http\Controllers\SugestaoMusicaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,17 +14,16 @@ use App\Http\Controllers\MusicaController;
 // Rotas públicas
 Route::get('/musicas', [MusicaController::class, 'index']);
 Route::get('/musicas/top5', [MusicaController::class, 'top5']);
-Route::post('/musicas/sugerir', [MusicaController::class, 'sugerir']);
+
+// Rotas de sugestões (públicas)
+Route::post('/sugestoes', [SugestaoMusicaController::class, 'sugerir']);
 
 // Rotas protegidas (requerem autenticação)
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/musicas/pendentes', [MusicaController::class, 'pendentes']);
-    Route::patch('/musicas/{musica}/aprovar', [MusicaController::class, 'aprovar']);
-    Route::patch('/musicas/{musica}/reprovar', [MusicaController::class, 'reprovar']);
-
-    // Rotas para gerenciar sugestões
-    Route::patch('/sugestoes/{sugestao}/aprovar', [MusicaController::class, 'aprovarSugestao']);
-    Route::patch('/sugestoes/{sugestao}/reprovar', [MusicaController::class, 'reprovarSugestao']);
+    // Gerenciar sugestões
+    Route::get('/sugestoes/pendentes', [SugestaoMusicaController::class, 'pendentes']);
+    Route::patch('/sugestoes/{sugestao}/aprovar', [SugestaoMusicaController::class, 'aprovar']);
+    Route::patch('/sugestoes/{sugestao}/reprovar', [SugestaoMusicaController::class, 'reprovar']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
