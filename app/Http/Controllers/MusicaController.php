@@ -54,13 +54,19 @@ class MusicaController extends Controller
         }
     }
 
-    /**
-     * Remover música (apenas admins)
-     */
+
     public function destroy(Musica $musica): JsonResponse
     {
         try {
+
+            $estavaNoTop5 = $musica->posicao_top5 !== null;
+
             $musica->delete();
+
+
+            if ($estavaNoTop5) {
+                Musica::reorganizarTop5();
+            }
 
             return response()->json([
                 'success' => true,
@@ -74,9 +80,7 @@ class MusicaController extends Controller
         }
     }
 
-    /**
-     * Atualizar posição no top 5 (apenas admins)
-     */
+
     public function updatePosicao(Request $request, Musica $musica): JsonResponse
     {
         try {
@@ -92,7 +96,26 @@ class MusicaController extends Controller
                 ], 422);
             }
 
-            $musica->update(['posicao_top5' => $request->posicao_top5]);
+
+            if ($musica->status !== 'aprovada') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Apenas músicas aprovadas podem ter posição no top 5'
+                ], 422);
+            }
+
+
+            $sucesso = $musica->atribuirPosicaoTop5($request->posicao_top5);
+
+            if (!$sucesso) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erro ao atribuir posição no top 5'
+                ], 422);
+            }
+
+
+            $musica->refresh();
 
             return response()->json([
                 'success' => true,
@@ -103,6 +126,25 @@ class MusicaController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Erro ao atualizar posição: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+    public function reorganizarTop5(): JsonResponse
+    {
+        try {
+            $resultado = Musica::reorganizarTop5();
+
+            return response()->json([
+                'success' => true,
+                'data' => $resultado,
+                'message' => 'Top 5 reorganizado com sucesso'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao reorganizar top 5: ' . $e->getMessage()
             ], 500);
         }
     }

@@ -18,8 +18,7 @@ class SugestaoMusicaController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'youtube_url' => 'required|url',
-                'video_id' => 'required|string|max:50',
-                'comentario_sugestao' => 'nullable|string|max:1000'
+                'video_id' => 'required|string|max:50'
             ]);
 
             if ($validator->fails()) {
@@ -42,13 +41,12 @@ class SugestaoMusicaController extends Controller
             $youtubeData = $this->extractYouTubeData($request->youtube_url, $request->video_id);
 
             $sugestao = SugestaoMusica::create([
-                'titulo' => $youtubeData['titulo'] ?? 'Título não encontrado', // Extrair título do YouTube
+                'titulo' => $youtubeData['titulo'] ?? 'Título não encontrado',
                 'artista' => $youtubeData['artista'] ?? 'Não identificado',
                 'youtube_url' => $request->youtube_url,
                 'visualizacoes' => $youtubeData['visualizacoes'] ?? 0,
                 'status' => 'pendente',
-                'comentario_sugestao' => $request->comentario_sugestao,
-                'user_id' => auth()->id() // Se houver usuário logado
+                'user_id' => auth()->id()
             ]);
 
             return response()->json([
@@ -98,16 +96,24 @@ class SugestaoMusicaController extends Controller
             $musica = Musica::create([
                 'titulo' => $sugestao->titulo,
                 'artista' => $sugestao->artista,
-                'letra' => $sugestao->letra,
                 'youtube_url' => $sugestao->youtube_url,
                 'visualizacoes' => $sugestao->visualizacoes,
-                'posicao_top5' => $request->posicao_top5 ?? null,
-                'status' => 'aprovada',
-                'comentario_sugestao' => $sugestao->comentario_sugestao
+                'status' => 'aprovada'
             ]);
 
-            // Marcar sugestão como aprovada
+
+            if ($request->has('posicao_top5') && $request->posicao_top5) {
+                $musica->atribuirPosicaoTop5($request->posicao_top5);
+            } else {
+
+                Musica::reorganizarTop5();
+            }
+
+
             $sugestao->update(['status' => 'aprovada']);
+
+
+            $musica->refresh();
 
             return response()->json([
                 'success' => true,

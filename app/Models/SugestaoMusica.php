@@ -14,10 +14,8 @@ class SugestaoMusica extends Model
     protected $fillable = [
         'titulo',
         'artista',
-        'letra',
         'youtube_url',
         'visualizacoes',
-        'comentario_sugestao',
         'status',
         'user_id'
     ];
