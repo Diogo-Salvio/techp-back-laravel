@@ -10,15 +10,12 @@ use Illuminate\Support\Facades\Validator;
 class MusicaController extends Controller
 {
     /**
-     * Listar todas as músicas aprovadas
+     * Listar todas as músicas
      */
     public function index(): JsonResponse
     {
         try {
-            $musicas = Musica::aprovadas()
-                ->orderBy('posicao_top5', 'asc')
-                ->orderBy('visualizacoes', 'desc')
-                ->get();
+            $musicas = Musica::orderBy('created_at', 'desc')->get();
 
             return response()->json([
                 'success' => true,
@@ -34,17 +31,20 @@ class MusicaController extends Controller
     }
 
     /**
-     * Mostrar top 5 músicas
+     * Listar top 5 músicas
      */
     public function top5(): JsonResponse
     {
         try {
-            $top5 = Musica::top5()->get();
+            $top5 = Musica::whereNotNull('posicao_top5')
+                ->orderBy('posicao_top5', 'asc')
+                ->limit(5)
+                ->get();
 
             return response()->json([
                 'success' => true,
                 'data' => $top5,
-                'message' => 'Top 5 carregado com sucesso'
+                'message' => 'Top 5 músicas carregadas com sucesso'
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -55,60 +55,54 @@ class MusicaController extends Controller
     }
 
     /**
-     * Aprovar música (apenas usuários autenticados)
+     * Remover música (apenas admins)
      */
-    public function aprovar(Request $request, Musica $musica): JsonResponse
+    public function destroy(Musica $musica): JsonResponse
     {
         try {
-            // Verificar se usuário está autenticado
-            if (!auth()->check()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Usuário não autenticado'
-                ], 401);
-            }
-
-            $musica->update([
-                'status' => 'aprovada',
-                'posicao_top5' => $request->posicao_top5 ?? null
-            ]);
+            $musica->delete();
 
             return response()->json([
                 'success' => true,
-                'data' => $musica,
-                'message' => 'Música aprovada com sucesso'
+                'message' => 'Música removida com sucesso'
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Erro ao aprovar música: ' . $e->getMessage()
+                'message' => 'Erro ao remover música: ' . $e->getMessage()
             ], 500);
         }
     }
 
     /**
-     * Reprovar música (apenas usuários autenticados)
+     * Atualizar posição no top 5 (apenas admins)
      */
-    public function reprovar(Request $request, Musica $musica): JsonResponse
+    public function updatePosicao(Request $request, Musica $musica): JsonResponse
     {
         try {
-            if (!auth()->check()) {
+            $validator = Validator::make($request->all(), [
+                'posicao_top5' => 'required|integer|min:1|max:5'
+            ]);
+
+            if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Usuário não autenticado'
-                ], 401);
+                    'message' => 'Dados inválidos',
+                    'errors' => $validator->errors()
+                ], 422);
             }
 
-            $musica->update(['status' => 'reprovada']);
+            $musica->update(['posicao_top5' => $request->posicao_top5]);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Música reprovada com sucesso'
+                'data' => $musica,
+                'message' => 'Posição atualizada com sucesso'
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Erro ao reprovar música: ' . $e->getMessage()
+                'message' => 'Erro ao atualizar posição: ' . $e->getMessage()
             ], 500);
         }
     }

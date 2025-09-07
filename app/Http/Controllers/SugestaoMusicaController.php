@@ -65,18 +65,11 @@ class SugestaoMusicaController extends Controller
     }
 
     /**
-     * Listar sugestões pendentes (apenas usuários autenticados)
+     * Listar sugestões pendentes (apenas admins)
      */
     public function pendentes(): JsonResponse
     {
         try {
-            if (!auth()->check()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Usuário não autenticado'
-                ], 401);
-            }
-
             $pendentes = SugestaoMusica::pendentes()
                 ->with('usuario')
                 ->orderBy('created_at', 'desc')
@@ -96,18 +89,11 @@ class SugestaoMusicaController extends Controller
     }
 
     /**
-     * Aprovar sugestão e mover para tabela de músicas
+     * Aprovar sugestão e mover para tabela de músicas (apenas admins)
      */
     public function aprovar(Request $request, SugestaoMusica $sugestao): JsonResponse
     {
         try {
-            if (!auth()->check()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Usuário não autenticado'
-                ], 401);
-            }
-
             // Criar música na tabela principal
             $musica = Musica::create([
                 'titulo' => $sugestao->titulo,
@@ -137,18 +123,11 @@ class SugestaoMusicaController extends Controller
     }
 
     /**
-     * Reprovar sugestão
+     * Reprovar sugestão (apenas admins)
      */
     public function reprovar(Request $request, SugestaoMusica $sugestao): JsonResponse
     {
         try {
-            if (!auth()->check()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Usuário não autenticado'
-                ], 401);
-            }
-
             $sugestao->update(['status' => 'reprovada']);
 
             return response()->json([
