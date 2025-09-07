@@ -10,12 +10,12 @@ use Illuminate\Support\Facades\Validator;
 class MusicaController extends Controller
 {
     /**
-     * Listar todas as músicas
+     * Listar todas as músicas ordenadas por visualizações
      */
     public function index(): JsonResponse
     {
         try {
-            $musicas = Musica::orderBy('created_at', 'desc')->get();
+            $musicas = Musica::orderBy('visualizacoes', 'desc')->get();
 
             return response()->json([
                 'success' => true,
