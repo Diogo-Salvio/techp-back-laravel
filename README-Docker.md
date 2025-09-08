@@ -1,8 +1,6 @@
-# 🎵 As Mais Tocadas de Tião Carreiro e Pardinho - BackEnd
+# As Mais Tocadas de Tião Carreiro e Pardinho - BackEnd
 
-
-
-## 🚀 Instalação Rápida
+## Instalação Rápida
 
 ### 1. Pré-requisitos
 - Docker Desktop instalado
@@ -14,18 +12,26 @@
 git clone [URL_DO_REPOSITORIO]
 cd laravel-backend
 
-# 2. Iniciar aplicação (Windows)
-docker-start.bat
+# 2. Copiar arquivo de ambiente
+copy env.docker.example .env
 
-# 2. Iniciar aplicação (Linux/Mac)
+# 3. Build e iniciar aplicação
+docker-compose build --no-cache
 docker-compose up -d
+
+# 4. Aguardar containers iniciarem (30 segundos)
+# 5. Executar migrations
+docker-compose exec app php artisan migrate --force
+
+# 6. Executar seeders
+docker-compose exec app php artisan db:seed --class=AdminUserSeeder --force
 ```
 
 ### 3. Acessar aplicação
 - **API:** http://localhost:8000/api
 - **phpMyAdmin:** http://localhost:8080
 
-## 🔑 Credenciais
+## Credenciais
 
 ### Usuário Admin
 - **Email:** fanumero1dotiaoecarreiro@admin.com
@@ -42,7 +48,7 @@ docker-compose up -d
 - **Username:** root
 - **Password:** root_password
 
-## 🛠️ Comandos Úteis
+## Comandos Úteis
 
 ### Parar aplicação
 ```bash
@@ -72,7 +78,7 @@ docker-artisan.bat "migrate:fresh --seed"
 docker-compose exec app php artisan migrate
 ```
 
-## 🐛 Problemas Comuns
+## Problemas Comuns
 
 ### Porta já em uso
 ```bash
@@ -90,7 +96,12 @@ docker-compose build --no-cache
 docker-compose up -d
 ```
 
-## 📋 Endpoints da API
+### Verificar status dos containers
+```bash
+docker-compose ps
+```
+
+## Endpoints da API
 
 ### Públicos
 - `GET /api/musicas` - Listar músicas

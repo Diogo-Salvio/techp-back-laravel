@@ -27,6 +27,9 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 # Instalar extensões PHP
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
+# Instalar extensão Redis
+RUN pecl install redis && docker-php-ext-enable redis
+
 # Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -50,11 +53,14 @@ WORKDIR /var/www/html
 # Copiar arquivos de dependências
 COPY composer.json composer.lock ./
 
-# Instalar dependências PHP
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# Instalar dependências PHP (sem scripts pós-instalação)
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
 # Copiar código da aplicação
 COPY . .
+
+# Executar scripts pós-instalação agora que o artisan está disponível
+RUN composer run-script post-autoload-dump
 
 # Definir permissões
 RUN chown -R www-data:www-data /var/www/html \

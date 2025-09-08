@@ -12,10 +12,29 @@ use App\Http\Controllers\AuthController;
 |--------------------------------------------------------------------------
 */
 
+// Rota de boas-vindas da API
+Route::get('/', function () {
+    return response()->json([
+        'success' => true,
+        'message' => 'As Melhores de Tião Carreiro e Pardinho!',
+        'version' => '1.0.0',
+        'endpoints' => [
+            'GET /api/musicas' => 'Listar todas as músicas',
+            'GET /api/musicas/top5' => 'Listar Top 5 músicas',
+            'POST /api/sugestoes' => 'Sugerir nova música',
+            'POST /api/login' => 'Fazer login',
+            'GET /api/sugestoes/pendentes' => 'Ver sugestões pendentes (Admin)',
+            'PATCH /api/sugestoes/{id}/aprovar' => 'Aprovar sugestão (Admin)',
+            'PATCH /api/sugestoes/{id}/reprovar' => 'Reprovar sugestão (Admin)',
+            'DELETE /api/musicas/{id}' => 'Remover música (Admin)',
+            'PATCH /api/musicas/{id}/posicao' => 'Atualizar posição (Admin)',
+            'POST /api/musicas/reorganizar-top5' => 'Reorganizar Top 5 (Admin)'
+        ]
+    ]);
+});
 
 Route::get('/musicas', [MusicaController::class, 'index']);
 Route::get('/musicas/top5', [MusicaController::class, 'top5']);
-
 
 Route::post('/sugestoes', [SugestaoMusicaController::class, 'sugerir']);
 
