@@ -17,40 +17,40 @@ class MusicaSeeder extends Seeder
             [
                 'titulo' => 'Chico Mineiro',
                 'artista' => 'Tião Carreiro e Pardinho',
-                'youtube_url' => 'https://www.youtube.com/watch?v=exemplo1',
-                'visualizacoes' => 1500000,
+                'youtube_url' => 'https://www.youtube.com/watch?v=lpGGNA6_920',
+                'visualizacoes' => 2500000,
                 'posicao_top5' => 1,
                 'status' => 'aprovada'
             ],
             [
                 'titulo' => 'Boi Soberano',
                 'artista' => 'Tião Carreiro e Pardinho',
-                'youtube_url' => 'https://www.youtube.com/watch?v=exemplo2',
-                'visualizacoes' => 1200000,
+                'youtube_url' => 'https://www.youtube.com/watch?v=3ZFO_0PFuHI',
+                'visualizacoes' => 2200000,
                 'posicao_top5' => 2,
                 'status' => 'aprovada'
             ],
             [
                 'titulo' => 'Pagode em Brasília',
                 'artista' => 'Tião Carreiro e Pardinho',
-                'youtube_url' => 'https://www.youtube.com/watch?v=exemplo3',
-                'visualizacoes' => 1000000,
+                'youtube_url' => 'https://www.youtube.com/watch?v=7ODUHvbqcNs',
+                'visualizacoes' => 1800000,
                 'posicao_top5' => 3,
                 'status' => 'aprovada'
             ],
             [
                 'titulo' => 'Rei do Gado',
                 'artista' => 'Tião Carreiro e Pardinho',
-                'youtube_url' => 'https://www.youtube.com/watch?v=exemplo4',
-                'visualizacoes' => 900000,
+                'youtube_url' => 'https://www.youtube.com/watch?v=dmzWLsOWMxg',
+                'visualizacoes' => 1600000,
                 'posicao_top5' => 4,
                 'status' => 'aprovada'
             ],
             [
                 'titulo' => 'Fogo de Chão',
                 'artista' => 'Tião Carreiro e Pardinho',
-                'youtube_url' => 'https://www.youtube.com/watch?v=exemplo5',
-                'visualizacoes' => 800000,
+                'youtube_url' => 'https://www.youtube.com/watch?v=foUUT4AKkz0',
+                'visualizacoes' => 1400000,
                 'posicao_top5' => 5,
                 'status' => 'aprovada'
             ]
