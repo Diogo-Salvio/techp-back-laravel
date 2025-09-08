@@ -9,9 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class MusicaController extends Controller
 {
-    /**
-     * Listar todas as músicas ordenadas por visualizações
-     */
+
     public function index(): JsonResponse
     {
         try {
@@ -30,9 +28,7 @@ class MusicaController extends Controller
         }
     }
 
-    /**
-     * Listar top 5 músicas
-     */
+
     public function top5(): JsonResponse
     {
         try {
@@ -54,6 +50,59 @@ class MusicaController extends Controller
         }
     }
 
+
+
+    public function update(Request $request, Musica $musica): JsonResponse
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'titulo' => 'sometimes|string|max:255',
+                'artista' => 'sometimes|string|max:255',
+                'youtube_url' => 'sometimes|url|max:500',
+                'visualizacoes' => 'sometimes|integer|min:0'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Dados inválidos',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            
+            if ($musica->status !== 'aprovada') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Apenas músicas aprovadas podem ser editadas'
+                ], 422);
+            }
+
+            
+            $dadosAtualizacao = $request->only(['titulo', 'artista', 'youtube_url', 'visualizacoes']);
+
+            if (empty($dadosAtualizacao)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Nenhum dado fornecido para atualização'
+                ], 422);
+            }
+
+            $musica->update($dadosAtualizacao);
+            $musica->refresh();
+
+            return response()->json([
+                'success' => true,
+                'data' => $musica,
+                'message' => 'Música atualizada com sucesso'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao atualizar música: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 
     public function destroy(Musica $musica): JsonResponse
     {

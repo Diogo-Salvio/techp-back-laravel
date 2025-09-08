@@ -26,6 +26,7 @@ Route::get('/', function () {
             'GET /api/sugestoes/pendentes' => 'Ver sugestões pendentes (Admin)',
             'PATCH /api/sugestoes/{id}/aprovar' => 'Aprovar sugestão (Admin)',
             'PATCH /api/sugestoes/{id}/reprovar' => 'Reprovar sugestão (Admin)',
+            'PATCH /api/musicas/{id}' => 'Editar música (Admin)',
             'DELETE /api/musicas/{id}' => 'Remover música (Admin)',
             'PATCH /api/musicas/{id}/posicao' => 'Atualizar posição (Admin)',
             'POST /api/musicas/reorganizar-top5' => 'Reorganizar Top 5 (Admin)'
@@ -54,6 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/sugestoes/{sugestao}/aprovar', [SugestaoMusicaController::class, 'aprovar']);
         Route::patch('/sugestoes/{sugestao}/reprovar', [SugestaoMusicaController::class, 'reprovar']);
 
+        Route::patch('/musicas/{musica}', [MusicaController::class, 'update']);
         Route::delete('/musicas/{musica}', [MusicaController::class, 'destroy']);
         Route::patch('/musicas/{musica}/posicao', [MusicaController::class, 'updatePosicao']);
         Route::post('/musicas/reorganizar-top5', [MusicaController::class, 'reorganizarTop5']);
