@@ -1,76 +1,79 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  # Aplicação Laravel
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: laravel-app
-    restart: unless-stopped
-    working_dir: /var/www/html
-    volumes:
-      - ./:/var/www/html
-      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
-    ports:
-      - "8000:80"
-    depends_on:
-      - db
-    networks:
-      - laravel-network
-    environment:
-      - APP_ENV=local
-      - APP_DEBUG=true
+    # Aplicação Laravel
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: laravel-app
+        restart: unless-stopped
+        working_dir: /var/www/html
+        volumes:
+            - .:/var/www/html
+            - vendor_data:/var/www/html/vendor
+            - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+        ports:
+            - "8000:80"
+        depends_on:
+            - db
+        networks:
+            - laravel-network
+        environment:
+            - APP_ENV=local
+            - APP_DEBUG=true
 
-  # Banco de dados MySQL
-  db:
-    image: mysql:8.0
-    container_name: laravel-mysql
-    restart: unless-stopped
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_DATABASE: laravel_db
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_USER: laravel_user
-      MYSQL_PASSWORD: laravel_password
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
-    networks:
-      - laravel-network
+    # Banco de dados MySQL
+    db:
+        image: mysql:8.0
+        container_name: laravel-mysql
+        restart: unless-stopped
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: laravel_db
+            MYSQL_ROOT_PASSWORD: root_password
+            MYSQL_USER: laravel_user
+            MYSQL_PASSWORD: laravel_password
+        volumes:
+            - mysql_data:/var/lib/mysql
+            - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+        networks:
+            - laravel-network
 
-  # phpMyAdmin (opcional - para gerenciar o banco)
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: laravel-phpmyadmin
-    restart: unless-stopped
-    ports:
-      - "8080:80"
-    environment:
-      PMA_HOST: db
-      PMA_PORT: 3306
-      PMA_USER: root
-      PMA_PASSWORD: root_password
-    depends_on:
-      - db
-    networks:
-      - laravel-network
+    # phpMyAdmin (opcional - para gerenciar o banco)
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: laravel-phpmyadmin
+        restart: unless-stopped
+        ports:
+            - "8080:80"
+        environment:
+            PMA_HOST: db
+            PMA_PORT: 3306
+            PMA_USER: root
+            PMA_PASSWORD: root_password
+        depends_on:
+            - db
+        networks:
+            - laravel-network
 
-  # Redis (opcional - para cache e sessões)
-  redis:
-    image: redis:7-alpine
-    container_name: laravel-redis
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    networks:
-      - laravel-network
+    # Redis (opcional - para cache e sessões)
+    redis:
+        image: redis:7-alpine
+        container_name: laravel-redis
+        restart: unless-stopped
+        ports:
+            - "6379:6379"
+        networks:
+            - laravel-network
 
 volumes:
-  mysql_data:
-    driver: local
+    mysql_data:
+        driver: local
+    vendor_data:
+        driver: local
 
 networks:
-  laravel-network:
-    driver: bridge
+    laravel-network:
+        driver: bridge

@@ -3,11 +3,13 @@
 ## Instalação Rápida
 
 ### 1. Pré-requisitos
-- Docker Desktop instalado
-- Git instalado
+
+-   Docker Desktop instalado
+-   Git instalado
 
 ### 2. Instalar e executar
-```bash
+
+bash
 # 1. Clonar o repositório
 git clone [URL_DO_REPOSITORIO]
 cd laravel-backend
@@ -26,96 +28,108 @@ docker-compose exec app php artisan key:generate --force
 # 6. Executar migrations
 docker-compose exec app php artisan migrate --force
 
-# 7. Executar seeders
-docker-compose exec app php artisan db:seed --class=AdminUserSeeder --force
-```
+# 7. Executar seeders (usuário admin + músicas)
+docker-compose exec app php artisan db:seed --force
+
 
 ### 3. Acessar aplicação
-- **API:** http://localhost:8000/api
-- **phpMyAdmin:** http://localhost:8080
+
+-   *API:* http://localhost:8000/api
+-   *phpMyAdmin:* http://localhost:8080
 
 ## Credenciais
 
 ### Usuário Admin
-- **Email:** fanumero1dotiaoecarreiro@admin.com
-- **Senha:** boisoberano
+
+-   *Email:* fanumero1dotiaoecarreiro@admin.com
+-   *Senha:* boisoberano
 
 ### Banco de Dados
-- **Host:** localhost:3306
-- **Database:** laravel_db
-- **Username:** laravel_user
-- **Password:** laravel_password
+
+-   *Host:* localhost:3306
+-   *Database:* laravel_db
+-   *Username:* laravel_user
+-   *Password:* laravel_password
 
 ### phpMyAdmin
-- **URL:** http://localhost:8080
-- **Username:** root
-- **Password:** root_password
+
+-   *URL:* http://localhost:8080
+-   *Username:* root
+-   *Password:* root_password
 
 ## Comandos Úteis
 
 ### Parar aplicação
-```bash
+
+bash
 # Windows
 docker-stop.bat
 
 # Linux/Mac
 docker-compose down
-```
+
 
 ### Ver logs
-```bash
+
+bash
 # Windows
 docker-logs.bat
 
 # Linux/Mac
 docker-compose logs -f app
-```
+
 
 ### Executar comandos Artisan
-```bash
+
+bash
 # Windows
 docker-artisan.bat migrate
 docker-artisan.bat "migrate:fresh --seed"
 
 # Linux/Mac
 docker-compose exec app php artisan migrate
-```
+
 
 ## Problemas Comuns
 
 ### Porta já em uso
-```bash
+
+bash
 # Verificar processos
 netstat -ano | findstr :8000
 netstat -ano | findstr :3306
 
 # Parar processo
 taskkill /PID [PID_NUMBER] /F
-```
+
 
 ### Rebuild da aplicação
-```bash
+
+bash
 docker-compose build --no-cache
 docker-compose up -d
-```
+
 
 ### Verificar status dos containers
-```bash
+
+bash
 docker-compose ps
-```
+
 
 ## Endpoints da API
 
 ### Públicos
-- `GET /api/musicas` - Listar músicas
-- `GET /api/musicas/top5` - Top 5 músicas
-- `POST /api/sugestoes` - Sugerir música
-- `POST /api/login` - Login
+
+-   GET /api/musicas - Listar músicas
+-   GET /api/musicas/top5 - Top 5 músicas
+-   POST /api/sugestoes - Sugerir música
+-   POST /api/login - Login
 
 ### Admin (requer autenticação)
-- `GET /api/sugestoes/pendentes` - Ver sugestões pendentes
-- `PATCH /api/sugestoes/{id}/aprovar` - Aprovar sugestão
-- `PATCH /api/sugestoes/{id}/reprovar` - Reprovar sugestão
-- `DELETE /api/musicas/{id}` - Remover música
-- `PATCH /api/musicas/{id}/posicao` - Atualizar posição
-- `POST /api/musicas/reorganizar-top5` - Reorganizar Top 5
+
+-   GET /api/sugestoes/pendentes - Ver sugestões pendentes
+-   PATCH /api/sugestoes/{id}/aprovar - Aprovar sugestão
+-   PATCH /api/sugestoes/{id}/reprovar - Reprovar sugestão
+-   DELETE /api/musicas/{id} - Remover música
+-   PATCH /api/musicas/{id}/posicao - Atualizar posição
+-   POST /api/musicas/reorganizar-top5 - Reorganizar Top 5
