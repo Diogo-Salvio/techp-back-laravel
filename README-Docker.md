@@ -20,10 +20,13 @@ docker-compose build --no-cache
 docker-compose up -d
 
 # 4. Aguardar containers iniciarem (30 segundos)
-# 5. Executar migrations
+# 5. Gerar chave de aplicação
+docker-compose exec app php artisan key:generate --force
+
+# 6. Executar migrations
 docker-compose exec app php artisan migrate --force
 
-# 6. Executar seeders
+# 7. Executar seeders
 docker-compose exec app php artisan db:seed --class=AdminUserSeeder --force
 ```
 
