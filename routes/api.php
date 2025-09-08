@@ -12,7 +12,7 @@ use App\Http\Controllers\AuthController;
 |--------------------------------------------------------------------------
 */
 
-// Rota de boas-vindas da API
+
 Route::get('/', function () {
     return response()->json([
         'success' => true,
@@ -39,7 +39,7 @@ Route::get('/musicas/top5', [MusicaController::class, 'top5']);
 
 Route::post('/sugestoes', [SugestaoMusicaController::class, 'sugerir']);
 
-// autenticação
+
 Route::post('/login', [AuthController::class, 'login']);
 
 // Rotas protegidas

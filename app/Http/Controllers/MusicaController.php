@@ -28,7 +28,6 @@ class MusicaController extends Controller
         }
     }
 
-
     public function top5(): JsonResponse
     {
         try {
@@ -49,8 +48,6 @@ class MusicaController extends Controller
             ], 500);
         }
     }
-
-
 
     public function update(Request $request, Musica $musica): JsonResponse
     {
@@ -129,7 +126,6 @@ class MusicaController extends Controller
         }
     }
 
-
     public function updatePosicao(Request $request, Musica $musica): JsonResponse
     {
         try {
@@ -153,7 +149,6 @@ class MusicaController extends Controller
                 ], 422);
             }
 
-
             $sucesso = $musica->atribuirPosicaoTop5($request->posicao_top5);
 
             if (!$sucesso) {
@@ -162,7 +157,6 @@ class MusicaController extends Controller
                     'message' => 'Erro ao atribuir posição no top 5'
                 ], 422);
             }
-
 
             $musica->refresh();
 
@@ -178,7 +172,6 @@ class MusicaController extends Controller
             ], 500);
         }
     }
-
 
     public function reorganizarTop5(): JsonResponse
     {

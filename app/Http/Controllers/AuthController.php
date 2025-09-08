@@ -11,9 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    /**
-     * Login do usuário
-     */
+
     public function login(Request $request): JsonResponse
     {
         try {
@@ -64,9 +62,6 @@ class AuthController extends Controller
         }
     }
 
-    /**
-     * Logout do usuário
-     */
     public function logout(Request $request): JsonResponse
     {
         try {
@@ -84,9 +79,6 @@ class AuthController extends Controller
         }
     }
 
-    /**
-     * Obter dados do usuário autenticado
-     */
     public function me(Request $request): JsonResponse
     {
         try {

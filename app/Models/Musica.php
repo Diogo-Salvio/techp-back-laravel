@@ -139,23 +139,22 @@ class Musica extends Model
 
     public static function reorganizarTop5(): array
     {
-        // Limpar todas as posições atuais primeiro
+
         self::whereNotNull('posicao_top5')->update(['posicao_top5' => null]);
 
-        // Buscar as 5 músicas aprovadas com mais visualizações
+
         $top5Musicas = self::aprovadas()
             ->orderBy('visualizacoes', 'desc')
             ->limit(5)
             ->get();
 
-        // Atribuir novas posições
         $resultado = [];
         foreach ($top5Musicas as $index => $musica) {
             $posicao = $index + 1;
             $musica->update(['posicao_top5' => $posicao]);
             $resultado[] = [
                 'posicao' => $posicao,
-                'musica' => $musica->fresh() // Recarregar para ter os dados atualizados
+                'musica' => $musica->fresh()
             ];
         }
 

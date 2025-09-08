@@ -41,7 +41,7 @@ services:
         networks:
             - laravel-network
 
-    # phpMyAdmin (opcional - para gerenciar o banco)
+    # phpMyAdmin (para gerenciar o banco)
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
         container_name: laravel-phpmyadmin
@@ -58,7 +58,7 @@ services:
         networks:
             - laravel-network
 
-    # Redis (opcional - para cache e sessões)
+    # Redis (para cache e sessões)
     redis:
         image: redis:7-alpine
         container_name: laravel-redis
