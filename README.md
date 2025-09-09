@@ -19,8 +19,7 @@ cd techp-back-laravel
 # 2. Copiar arquivo de ambiente
 copy .env.example .env
 
-# 3. Build e iniciar aplicação
-docker-compose build --no-cache
+# 3. Iniciar aplicação
 docker-compose up -d
 
 # 4. Aguardar containers iniciarem (30 segundos)
