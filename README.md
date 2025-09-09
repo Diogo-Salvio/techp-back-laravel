@@ -13,7 +13,7 @@ API REST desenvolvida em Laravel para gerenciar um ranking das músicas mais pop
 
 ```bash
 # 1. Clonar o repositório
-git clone `https://github.com/Diogo-Salvio/techp-back-laravel`
+git clone `https://github.com/Diogo-Salvio/techp-back-laravel.git`
 cd techp-back-laravel
 
 # 2. Copiar arquivo de ambiente
