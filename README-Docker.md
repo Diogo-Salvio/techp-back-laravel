@@ -12,7 +12,7 @@
 bash
 # 1. Clonar o repositório
 git clone [URL_DO_REPOSITORIO]
-cd laravel-backend
+cd [REPOSITORIO]
 
 # 2. Copiar arquivo de ambiente
 copy env.docker.example .env
@@ -23,13 +23,13 @@ docker-compose up -d
 
 # 4. Aguardar containers iniciarem (30 segundos)
 # 5. Gerar chave de aplicação
-docker-compose exec app php artisan key:generate --force
+docker-compose exec app php artisan key:generate 
 
 # 6. Executar migrations
-docker-compose exec app php artisan migrate --force
+docker-compose exec app php artisan migrate 
 
 # 7. Executar seeders (usuário admin + músicas)
-docker-compose exec app php artisan db:seed --force
+docker-compose exec app php artisan db:seed
 
 
 ### 3. Acessar aplicação
@@ -61,22 +61,8 @@ docker-compose exec app php artisan db:seed --force
 
 ### Parar aplicação
 
-bash
-# Windows
-docker-stop.bat
-
-# Linux/Mac
 docker-compose down
 
-
-### Ver logs
-
-bash
-# Windows
-docker-logs.bat
-
-# Linux/Mac
-docker-compose logs -f app
 
 
 ### Executar comandos Artisan

@@ -2,11 +2,62 @@
 
 API REST desenvolvida em Laravel para gerenciar um ranking das músicas mais populares da dupla Tião Carreiro e Pardinho.
 
+## Instalação Rápida
 
+### 1. Pré-requisitos
 
-## Instalação
+-   Docker Desktop instalado
+-   Git instalado
 
-Para instruções detalhadas de instalação e configuração, consulte o arquivo [README-Docker.md](README-Docker.md).
+### 2. Instalar e executar
+
+```bash
+# 1. Clonar o repositório
+git clone `https://github.com/Diogo-Salvio/techp-back-laravel`
+cd techp-back-laravel
+
+# 2. Copiar arquivo de ambiente
+copy .env.example .env
+
+# 3. Build e iniciar aplicação
+docker-compose build --no-cache
+docker-compose up -d
+
+# 4. Aguardar containers iniciarem (30 segundos)
+# 5. Gerar chave de aplicação
+docker-compose exec app php artisan key:generate 
+
+# 6. Executar migrations
+docker-compose exec app php artisan migrate 
+
+# 7. Executar seeders (usuário admin + músicas)
+docker-compose exec app php artisan db:seed
+```
+
+### 3. Acessar aplicação
+
+-   *API:* http://localhost:8000/api
+-   *phpMyAdmin:* http://localhost:8080
+
+## Credenciais
+
+### Usuário Admin
+
+-   *Email:* fanumero1dotiaoecarreiro@admin.com
+-   *Senha:* boisoberano
+
+### Banco de Dados
+
+-   *Host:* localhost:3306
+-   *Database:* laravel_db
+-   *Username:* laravel_user
+-   *Password:* laravel_password
+
+### phpMyAdmin
+
+-   *URL:* http://localhost:8080
+-   *Username:* root
+-   *Password:* root_password
 
 ## Funcionalidades
 
