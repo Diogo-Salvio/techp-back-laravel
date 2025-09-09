@@ -15,10 +15,10 @@ class MusicaSeeder extends Seeder
     {
         $musicas = [
             [
-                'titulo' => 'Chico Mineiro',
+                'titulo' => 'caçador do Ivinhema',
                 'artista' => 'Tião Carreiro e Pardinho',
-                'youtube_url' => 'https://www.youtube.com/watch?v=lpGGNA6_920',
-                'visualizacoes' => 2500000,
+                'youtube_url' => 'https://www.youtube.com/watch?v=4M7g7njJXJA',
+                'visualizacoes' => 18000000,
                 'posicao_top5' => 1,
                 'status' => 'aprovada'
             ],
