@@ -20,17 +20,15 @@ cd techp-back-laravel
 copy .env.example .env
 
 # 3. Iniciar aplicação
-docker-compose up -d
+docker compose up -d
 
 # 4. Aguardar containers iniciarem (30 segundos)
 # 5. Gerar chave de aplicação
-docker-compose exec app php artisan key:generate 
+docker compose exec app php artisan key:generate 
 
 # 6. Executar migrations
-docker-compose exec app php artisan migrate 
+docker compose exec app php artisan migrate --seed
 
-# 7. Executar seeders (usuário admin + músicas)
-docker-compose exec app php artisan db:seed
 ```
 
 ### 3. Acessar aplicação
